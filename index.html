@@ -1,1 +1,142 @@
 
+
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thiha Movie Recap AI Studio</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:16px;
+  background:#10101c;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+header{
+  text-align:center;
+  padding:22px 10px;
+  background:linear-gradient(135deg,#7c3aed,#21133e);
+  border-radius:18px;
+}
+h1{font-size:23px;margin:0}
+header p{color:#ddd;margin-bottom:0}
+.card{
+  background:#1d1b2e;
+  padding:18px;
+  margin-top:18px;
+  border-radius:15px;
+}
+h2{color:#c4a5ff;font-size:19px}
+input,textarea{
+  width:100%;
+  padding:13px;
+  margin:8px 0;
+  border:1px solid #555;
+  border-radius:9px;
+  background:#29263c;
+  color:white;
+  font-size:15px;
+}
+textarea{min-height:130px}
+button{
+  width:100%;
+  padding:13px;
+  margin-top:10px;
+  border:0;
+  border-radius:9px;
+  background:#8b5cf6;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+.movie{
+  background:#29263c;
+  padding:12px;
+  margin-top:12px;
+  border-radius:12px;
+}
+.movie h3{color:#d6c3ff}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🎬 Thiha Movie Recap</h1>
+<p>My Personal Movie Collection</p>
+</header>
+
+<div class="card">
+<h2>✍️ Movie Recap Studio</h2>
+<input id="name" placeholder="Movie Name">
+<textarea id="story" placeholder="Movie ဇာတ်လမ်းကို ဒီမှာရေးပါ..."></textarea>
+<button onclick="makeScript()">📝 Script ပြင်ဆင်ရန်</button>
+<textarea id="script" placeholder="Recap Script ဒီမှာပေါ်လာပါမယ်..."></textarea>
+<button onclick="saveMovie()">💾 Save Movie</button>
+</div>
+
+<div class="card">
+<h2>🎞️ My Movie Collection</h2>
+<div id="movies"></div>
+</div>
+
+<script>
+let movies=JSON.parse(localStorage.getItem("thihaMovies")||"[]");
+
+function makeScript(){
+  let story=document.getElementById("story").value.trim();
+  if(!story){
+    alert("Movie ဇာတ်လမ်းအရင်ရေးပေးပါ");
+    return;
+  }
+  document.getElementById("script").value=
+    "ဒီဇာတ်လမ်းလေးမှာတော့ "+story+
+    "\n\nဒီဇာတ်လမ်းရဲ့ နောက်ဆက်တွဲကို စိတ်ဝင်စားစရာကောင်းစွာ ဆက်လက်တင်ဆက်ပေးသွားမှာ ဖြစ်ပါတယ်။";
+}
+
+function saveMovie(){
+  let name=document.getElementById("name").value.trim();
+  let story=document.getElementById("story").value.trim();
+  let script=document.getElementById("script").value.trim();
+  if(!name){
+    alert("Movie Name ရေးပေးပါ");
+    return;
+  }
+  movies.push({name,story,script});
+  localStorage.setItem("thihaMovies",JSON.stringify(movies));
+  showMovies();
+  alert("Movie သိမ်းပြီးပါပြီ");
+}
+
+function deleteMovie(index){
+  movies.splice(index,1);
+  localStorage.setItem("thihaMovies",JSON.stringify(movies));
+  showMovies();
+}
+
+function showMovies(){
+  let box=document.getElementById("movies");
+  box.innerHTML="";
+  movies.forEach((movie,index)=>{
+    let div=document.createElement("div");
+    div.className="movie";
+    let title=document.createElement("h3");
+    title.textContent="🎬 "+movie.name;
+    let story=document.createElement("p");
+    story.textContent=movie.story;
+    let script=document.createElement("p");
+    script.textContent=movie.script;
+    let del=document.createElement("button");
+    del.textContent="🗑️ Delete";
+    del.onclick=()=>deleteMovie(index);
+    div.append(title,story,script,del);
+    box.appendChild(div);
+  });
+}
+showMovies();
+</script>
+
+</body>
+</html>
